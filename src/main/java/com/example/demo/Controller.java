@@ -10,10 +10,14 @@ public class Controller {
 
     @GetMapping(path = "/print")
     public String getCallerAddress(HttpServletRequest request) {
+        String returnValue;
         if(request.getHeader("X-Forwarded-For") != null){
-            return request.getHeader("X-Forwarded-For");
+            returnValue = request.getHeader("X-Forwarded-For");
         }else{
-            return request.getRemoteAddr();
+            returnValue = request.getRemoteAddr();
         }
+        System.out.println(returnValue);
+        return returnValue;
+
     }
 }
