@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +18,19 @@ public class Controller {
 
     List<String> ips = new ArrayList<>();
     private final String israelPass = "israel";
+    List<InputStream> images;
+    Random rnd;
+
+    @PostConstruct
+    private void LoadImages() {
+        images = new ArrayList<>();
+        images.add(getClass().getResourceAsStream("/taiwan.jpg"));
+        images.add(getClass().getResourceAsStream("/sea.jpg"));
+        images.add(getClass().getResourceAsStream("/norveig.jpg"));
+        images.add(getClass().getResourceAsStream("/tailand.jpg"));
+        images.add(getClass().getResourceAsStream("/water.jpg"));
+        rnd = new Random();
+    }
 
     @GetMapping(
             value = "/logo",
@@ -24,10 +38,20 @@ public class Controller {
     )
     public @ResponseBody
     byte[] getImageWithMediaType(HttpServletRequest request) throws IOException {
-        InputStream in = getClass()
-                .getResourceAsStream("/taiwan.jpg");
         saveIp(request);
-        return in.readAllBytes();
+
+        int number = rnd.nextInt(4);
+        return images.get(number).readAllBytes();
+    }
+
+    @GetMapping(
+            value = "/logo/{id}",
+            produces = MediaType.IMAGE_JPEG_VALUE
+    )
+    public @ResponseBody
+    byte[] getImageWithMediaType(HttpServletRequest request, @PathVariable("id") Integer id) throws IOException {
+        saveIp(request);
+        return images.get(id).readAllBytes();
     }
 
     @GetMapping(path = "/print")
