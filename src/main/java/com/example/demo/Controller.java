@@ -30,6 +30,7 @@ public class Controller {
         images.add(getClass().getResourceAsStream("/norveig.jpg").readAllBytes());
         images.add(getClass().getResourceAsStream("/tailand.jpg").readAllBytes());
         images.add(getClass().getResourceAsStream("/water.jpg").readAllBytes());
+        images.add(getClass().getResourceAsStream("/download.jpg").readAllBytes());
         loaded = true;
         rnd = new Random();
     }
