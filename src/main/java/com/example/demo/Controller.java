@@ -60,7 +60,7 @@ public class Controller {
     @GetMapping(path = "/print")
     public String getCallerAddress(HttpServletRequest request) {
         saveIp(request);
-        return "Hello world!";
+        return "hi there";
     }
 
     private void saveIp(HttpServletRequest request) {
