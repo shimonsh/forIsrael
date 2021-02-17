@@ -18,17 +18,19 @@ public class Controller {
 
     List<String> ips = new ArrayList<>();
     private final String israelPass = "israel";
-    List<InputStream> images;
+    List<byte[]> images;
     Random rnd;
+    boolean loaded = false;
 
-    @PostConstruct
-    private void LoadImages() {
+    private void loadImages() throws IOException  {
+        if(loaded) return;
         images = new ArrayList<>();
-        images.add(getClass().getResourceAsStream("/taiwan.jpg"));
-        images.add(getClass().getResourceAsStream("/sea.jpg"));
-        images.add(getClass().getResourceAsStream("/norveig.jpg"));
-        images.add(getClass().getResourceAsStream("/tailand.jpg"));
-        images.add(getClass().getResourceAsStream("/water.jpg"));
+        images.add(getClass().getResourceAsStream("/taiwan.jpg").readAllBytes());
+        images.add(getClass().getResourceAsStream("/sea.jpg").readAllBytes());
+        images.add(getClass().getResourceAsStream("/norveig.jpg").readAllBytes());
+        images.add(getClass().getResourceAsStream("/tailand.jpg").readAllBytes());
+        images.add(getClass().getResourceAsStream("/water.jpg").readAllBytes());
+        loaded = true;
         rnd = new Random();
     }
 
@@ -38,10 +40,10 @@ public class Controller {
     )
     public @ResponseBody
     byte[] getImageWithMediaType(HttpServletRequest request) throws IOException {
+        loadImages();
         saveIp(request);
-
-        int number = rnd.nextInt(4);
-        return images.get(number).readAllBytes();
+        int number = rnd.nextInt(5);
+        return images.get(number);
     }
 
     @GetMapping(
@@ -50,8 +52,9 @@ public class Controller {
     )
     public @ResponseBody
     byte[] getImageWithMediaType(HttpServletRequest request, @PathVariable("id") Integer id) throws IOException {
+        loadImages();
         saveIp(request);
-        return images.get(id).readAllBytes();
+        return images.get(id);
     }
 
     @GetMapping(path = "/print")
